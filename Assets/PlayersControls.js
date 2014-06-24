@@ -83,11 +83,8 @@ function processTouch(touch: Touch, touchNumber: int) {
             }
         }
     } else if(touch.phase == TouchPhase.Moved) {
-        Debug.Log("Move : " + touchNumber);
-        Debug.Log("Touches : " + playerTouches[0] + "   " + playerTouches[1]);
         for(var i = 0; i < playerTouches.Length; ++i) {
             if(touchNumber == playerTouches[i]) {
-                //var v3: Vector3 = new Vector3(Input.mousePosition.x, Input.mousePosition.y, playerDistances[i]);
                 var v3: Vector3 = new Vector3(touch.position.x, touch.position.y, playerDistances[i]);
                 v3 = Camera.main.ScreenToWorldPoint(v3);
                 playerTransforms[i].position = v3 + playerOffsets[i];
@@ -101,11 +98,9 @@ function processTouch(touch: Touch, touchNumber: int) {
 function Update() {
 
     if(Input.touchCount > 0) {
-        //Debug.Log("count = " + Input.touchCount);
         for(var i = 0; i < Input.touchCount; i++)
         {
             processTouch(Input.GetTouch(i), i);
-            //Debug.Log("touch : " + i + "   " + Input.GetTouch(i).position);
         }
     }
 }

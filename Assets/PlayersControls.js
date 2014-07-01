@@ -1,8 +1,5 @@
 #pragma strict
 
-
-var moveUp: KeyCode;
-var moveDown: KeyCode;
 var speed: float = 10;
 
 var playerTouches: int[] = [-1, -1];
@@ -15,7 +12,6 @@ var dragging: boolean = false;
 var offset: Vector3;
 var toDrag: Transform;
 
-
 function Start () {
     playerTouches = [-1, -1];
     playerDistances = [0.0, 0.0];
@@ -25,8 +21,6 @@ function Start () {
     playerTransforms[1] = null;
 
     playerOffsets = new Vector3[2];
-    //playerOffsets[0] = null;
-    //playerOffsets[1] = null;
 }
 
 function resetPlayer(touchNumber: int) {

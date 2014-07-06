@@ -6,6 +6,7 @@ var playerTouches: int[] = [-1, -1];
 var playerTransforms: Transform[] = new Transform[2];
 var playerDistances: float[] = [0.0, 0.0];
 var playerOffsets: Vector3[] = new Vector3[2];
+static var deltaPos: Vector2[] = new Vector2[2];
 
 var dist: float;
 var dragging: boolean = false;
@@ -21,6 +22,10 @@ function Start () {
     playerTransforms[1] = null;
 
     playerOffsets = new Vector3[2];
+    
+    deltaPos = new Vector2[2];
+    deltaPos[0] = new Vector2(0, 0);
+    deltaPos[1] = new Vector2(0, 0);
 }
 
 function resetPlayer(touchNumber: int) {
@@ -29,6 +34,8 @@ function resetPlayer(touchNumber: int) {
             playerTouches[i] = -1;
         }
     }
+    deltaPos[0] = new Vector2(0, 0);
+    deltaPos[1] = new Vector2(0, 0);
 }
 
 function getCollider(vec: Vector2) {
@@ -37,7 +44,7 @@ function getCollider(vec: Vector2) {
 
     if (hit) {
         if (hit.collider != null) {
-            Debug.Log(hit.collider.name);
+            //Debug.Log(hit.collider.name);
             var index: int = -1;
             if(hit.collider.name == "Player01") {
                 index = 0;
@@ -46,7 +53,7 @@ function getCollider(vec: Vector2) {
             }
 
             if(index >= 0) {
-                Debug.Log("index: " + index);
+                //Debug.Log("index: " + index);
                 playerTransforms[index] = hit.transform;
                 playerDistances[index] = hit.transform.position.z - Camera.main.transform.position.z;
                 var v3: Vector3 = new Vector3(vec.x, vec.y, playerDistances[index]);
@@ -79,6 +86,8 @@ function processTouch(touch: Touch, touchNumber: int) {
     } else if(touch.phase == TouchPhase.Moved) {
         for(var i = 0; i < playerTouches.Length; ++i) {
             if(touchNumber == playerTouches[i]) {
+                //Debug.Log("Delta = " + deltaPos[i]);
+                deltaPos[i] = touch.deltaPosition;
                 var v3: Vector3 = new Vector3(touch.position.x, touch.position.y, playerDistances[i]);
                 v3 = Camera.main.ScreenToWorldPoint(v3);
                 playerTransforms[i].position = v3 + playerOffsets[i];

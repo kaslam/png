@@ -2,8 +2,11 @@
 
 var ballSpeed: float = 100;
 
+var playerScript: PlayersControls;
+
 function Start () {
     resetBall(null);
+    playerScript = GameObject.FindGameObjectWithTag("Player").gameObject.GetComponent(PlayersControls);
 }
 
 function Update() {
@@ -13,11 +16,30 @@ function Update() {
 }
 
 function OnCollisionEnter2D (colInfo : Collision2D) {
+
     if(colInfo.collider.tag == "Player") {
-        Debug.Log("velocity : " + colInfo.relativeVelocity);
-        Debug.Log("velocity2 : " + colInfo.transform);
-        rigidbody2D.velocity.x = (colInfo.transform.position.x - rigidbody2D.gameObject.GetComponent(Transform).position.x) * 5;
-        rigidbody2D.velocity.y = (colInfo.transform.position.y - rigidbody2D.gameObject.GetComponent(Transform).position.y) * 5;
+    
+        //playerScript = GameObject.FindGameObjectWithTag("Player").gameObject.GetComponent(PlayersControls);
+        playerScript = colInfo.collider.gameObject.GetComponent(PlayersControls);
+
+        var dp = new Vector2(0, 0);
+        if(colInfo.collider.gameObject.name == "Player01") {
+            dp = playerScript.deltaPos[0];
+        } else if(colInfo.collider.gameObject.name == "Player02"){
+            dp = playerScript.deltaPos[1];
+        }
+        var ray : Ray = Camera.main.ScreenPointToRay(new Vector2(colInfo.transform.position.x, colInfo.transform.position.y));
+        var hit : RaycastHit2D = Physics2D.Raycast(ray.origin, ray.direction);
+
+        Debug.Log("velocity player : " + dp);
+        Debug.Log("velocity ball : " + rigidbody2D.velocity);
+        if(Mathf.Abs(rigidbody2D.velocity.x) < Mathf.Abs(dp.x * 3)) {
+            rigidbody2D.velocity.x = dp.x * 3;
+        }
+        if(Mathf.Abs(rigidbody2D.velocity.y) < Mathf.Abs(dp.y * 3)) {
+            rigidbody2D.velocity.x = dp.y * 3;
+        }
+
         audio.pitch = Random.Range(0.8f, 1.2f);
         audio.Play();
     }
@@ -53,10 +75,12 @@ function resetBall(hitInfo : Collider2D) {
 }
 
 function goBall() {
+/*
     var randomNumber = Random.Range(0, 2);
     if(randomNumber <= 0.5) {
         rigidbody2D.AddForce(new Vector2(ballSpeed, 10));
     } else {
         rigidbody2D.AddForce(new Vector2(-ballSpeed, -10));
     }
+    */
 }
